@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, Eye, EyeOff, Github } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Github, Loader2 } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -53,6 +53,7 @@ interface AuthPageProps {
   heroImageSrc?: string;
   testimonials?: Testimonial[];
   formPosition?: "left" | "right";
+  isLoading?: boolean;
   onSignIn?: (email: string, password: string) => void;
   onSignUp?: (name: string, email: string, password: string) => void;
   onGoogleSignIn?: () => void;
@@ -88,8 +89,8 @@ const TestimonialCard = ({
       "opacity-0 blur-xs animate-fade-slide-in flex items-start gap-3 rounded-3xl bg-card/40 dark:bg-zinc-800/40 backdrop-blur-xl border border-white/10 p-5 w-64",
       {
         hidden: !testimonial,
-        "hidden xl:flex": delay > 1200,
-        "hidden 2xl:flex": delay > 1400,
+        "hidden xl:flex": delay > 500,
+        "hidden xl:hidden 2xl:flex": delay > 700,
       }
     )}
   >
@@ -117,6 +118,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
   heroImageSrc,
   testimonials = [],
   formPosition = "right",
+  isLoading = false,
   onSignIn,
   onSignUp,
   onGoogleSignIn,
@@ -251,6 +253,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({
               <div className="flex flex-col gap-3 delay-700 opacity-0 animate-fade-slide-up blur-xs">
                 <Button
                   variant="outline"
+                  disabled={isLoading}
                   className={cn(
                     "flex items-center justify-center w-full gap-3 py-4 text-base transition-colors border h-14 border-border rounded-2xl",
                     {
@@ -259,12 +262,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                   )}
                   onClick={onGoogleSignIn}
                 >
-                  <GoogleIcon />
+                  {isLoading ? (
+                    <Loader2 className="size-5 animate-spin" />
+                  ) : (
+                    <GoogleIcon />
+                  )}
                   Continue with Google
                 </Button>
 
                 <Button
                   variant="outline"
+                  disabled={isLoading}
                   onClick={onGitHubSignIn}
                   className={cn(
                     "flex items-center justify-center w-full gap-3 py-4 text-base transition-colors border h-14 border-border rounded-2xl",
@@ -273,7 +281,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({
                     }
                   )}
                 >
-                  <Github className="size-5" />
+                  {isLoading ? (
+                    <Loader2 className="size-5 animate-spin" />
+                  ) : (
+                    <Github className="size-5" />
+                  )}
                   Continue with GitHub
                 </Button>
               </div>
@@ -396,9 +408,14 @@ export const AuthPage: React.FC<AuthPageProps> = ({
 
               <Button
                 type="submit"
+                disabled={isLoading}
                 className="w-full py-4 font-medium transition-colors delay-300 opacity-0 h-14 animate-fade-slide-up blur-xs rounded-2xl bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                {isSignUp ? "Create Account" : "Sign In"}
+                {isLoading ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  isSignUp ? "Create Account" : "Sign In"
+                )}
               </Button>
             </form>
           )}

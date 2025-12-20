@@ -1,7 +1,9 @@
 "use client";
 
-import { signIn } from "@/lib/auth-client";
+import { signIn } from "@/modules/auth/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import { AuthPage, Testimonial } from "./auth-page";
 
 const sampleTestimonials: Testimonial[] = [
@@ -27,15 +29,19 @@ const sampleTestimonials: Testimonial[] = [
 
 const LoginUI = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGitHubLogin = async () => {
+    setIsLoading(true);
     try {
       await signIn.social({
         provider: "github",
       });
     } catch (error) {
       console.error("[LOGIN_ERR]", error);
+      toast.error("Failed to sign in with GitHub. Please try again.");
     }
+    setIsLoading(false);
   };
 
   const handleResetPassword = () => {
@@ -53,6 +59,7 @@ const LoginUI = () => {
       heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
       testimonials={sampleTestimonials}
       formPosition="right"
+      isLoading={isLoading}
       onGitHubSignIn={handleGitHubLogin}
       onResetPassword={handleResetPassword}
       onSwitchMode={handleSwitchToRegister}
