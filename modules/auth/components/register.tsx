@@ -36,6 +36,7 @@ const RegisterUI = () => {
     try {
       const { error } = await signIn.social({
         provider: "github",
+        callbackURL: "/dashboard",
       });
 
       if (error) {
