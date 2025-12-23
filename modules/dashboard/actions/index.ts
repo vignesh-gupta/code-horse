@@ -6,7 +6,6 @@ import {
 
 export async function getContributionStats() {
   try {
-    // Get the actual GitHub username from the GitHub API
     const octokit = await getOctokitInstance();
 
     const { data: user } = await octokit.rest.users.getAuthenticated();
