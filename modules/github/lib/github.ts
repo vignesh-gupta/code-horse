@@ -225,3 +225,50 @@ export async function getRepoFilesContent(
 
   return files;
 }
+
+export async function getPullRequestDiff(
+  owner: string,
+  repo: string,
+  prNumber: number,
+  token: string
+) {
+  const octokit = new Octokit({ auth: token });
+
+  const { data: pr } = await octokit.rest.pulls.get({
+    owner,
+    repo,
+    pull_number: prNumber,
+  });
+
+  const { data: diff } = await octokit.rest.pulls.get({
+    owner,
+    repo,
+    pull_number: prNumber,
+    mediaType: {
+      format: "diff",
+    },
+  });
+
+  return {
+    title: pr.title,
+    description: pr.body || "",
+    diff: diff as unknown as string,
+  };
+}
+
+export async function postReviewComment(
+  token: string,
+  owner: string,
+  repo: string,
+  prNumber: number,
+  review: string
+) {
+  const octokit: Octokit = new Octokit({ auth: token });
+
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: prNumber,
+    body: `## 🤖 AI Code Review\n\n${review}\n\n---\n*Powered  by CodeHorse*`,
+  });
+}
