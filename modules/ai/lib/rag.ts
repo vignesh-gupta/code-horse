@@ -63,14 +63,12 @@ export async function retrieveContext(
 
   const results = await pineconeIndex.query({
     vector: embedding,
-    topK,
     filter: { repoId },
+    topK,
     includeMetadata: true,
   });
 
-  return (
-    results.matches?.flatMap((match) =>
-      match.metadata ? (match.metadata.content as string[]) : []
-    ) || []
-  );
+  return results.matches
+    .map((match) => match.metadata?.content as string)
+    .filter(Boolean);
 }
