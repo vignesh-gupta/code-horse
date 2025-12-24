@@ -28,3 +28,15 @@ export const requireUnAuth = async () => {
 
   return session;
 };
+
+export const getCurrentSession = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  return session;
+};

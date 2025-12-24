@@ -1,16 +1,9 @@
 import db from "@/lib/db";
-import { auth } from "@/modules/auth/lib/auth";
-import { headers } from "next/headers";
+import { getCurrentSession } from "@/modules/auth/lib/utils";
 import { Octokit } from "octokit";
 
 export const getGitHubToken = async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    throw new Error("Unauthorized");
-  }
+  const session = await getCurrentSession();
 
   const account = await db.account.findFirst({
     where: {
@@ -81,3 +74,20 @@ export const fetchUserContributions = async (userName: string) => {
     throw new Error("Failed to fetch contributions from GitHub");
   }
 };
+
+export async function getRepositories(page: number = 1, perPage: number = 10) {
+  const octokit = await getOctokitInstance();
+
+  const { data } = await octokit.rest.repos.listForAuthenticatedUser({
+    visibility: "all",
+    sort: "updated",
+    direction: "desc",
+    page,
+    per_page: perPage,
+  });
+
+  return data;
+}
+
+
+export type GitHubRepository = Awaited<ReturnType<typeof getRepositories>>[number];
