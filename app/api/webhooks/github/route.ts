@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
     }
 
     if (event === "pull_request") {
-      const { action, full_name, prNumber } = body;
+      const { action, repository, number:prNumber } = body;
 
-      const [owner, repoName] = full_name.split("/");
+      const [owner, repoName] = repository.full_name.split("/");
 
       if (action === "opened" || action === "synchronize") {
         reviewPullRequest(owner, repoName, prNumber)
