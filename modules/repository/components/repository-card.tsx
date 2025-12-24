@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,16 +12,27 @@ import {
 } from "@/components/ui/card";
 import { GitHubRepository } from "@/modules/github/lib/github";
 import { ExternalLink, Star } from "lucide-react";
-import { useState } from "react";
+import { useTransition } from "react";
+import { useConnectRepository } from "../hooks/use-connect-repository";
 
 const RepositoryCard = (
   repo: GitHubRepository & {
     isConnected?: boolean;
   }
 ) => {
-  const [isConnecting, setIsConnecting] = useState(false);
+  const { mutateAsync } = useConnectRepository();
 
-  const handleConnect = async (repo: GitHubRepository) => {};
+  const [isConnecting, start] = useTransition();
+
+  const handleConnect = async (repo: GitHubRepository) => {
+    start(async () => {
+      await mutateAsync({
+        githubId: Number(repo.id),
+        owner: repo.owner.login,
+        repo: repo.name,
+      });
+    });
+  };
 
   return (
     <Card className="hover:shadow-md transition-shadow justify-between">
