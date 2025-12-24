@@ -1,0 +1,76 @@
+import { embed } from "ai";
+import { google } from "@ai-sdk/google";
+import { pineconeIndex } from "@/lib/pinecode";
+
+export async function generateEmbedding(text: string) {
+  const { embedding } = await embed({
+    model: google.embedding("text-embedding-004"),
+    value: text,
+  });
+
+  return embedding;
+}
+
+export async function indexCodeBase(
+  repoId: string,
+  files: { path: string; content: string }[]
+) {
+  const vectors = [];
+
+  for (const file of files) {
+    const content = `File: ${file.path}\n\n${file.content}`;
+
+    const truncatedContent = content.slice(0, 8000); // Limit to first 8000 characters
+    try {
+      const embedding = await generateEmbedding(truncatedContent);
+      vectors.push({
+        id: `${repoId}-${file.path.replace(/\//g, "_")}`,
+        values: embedding,
+        metadata: {
+          repoId,
+          path: file.path,
+          content: truncatedContent,
+        },
+      });
+    } catch (error) {
+      console.error(
+        `Failed to generate embedding for file ${file.path}:`,
+        error
+      );
+    }
+  }
+
+  if (vectors.length > 0) {
+    const batchSize = 100;
+    for (let i = 0; i < vectors.length; i += batchSize) {
+      const batch = vectors.slice(i, i + batchSize);
+      // Assuming we have a function saveVectorsToDB to save vectors
+      await pineconeIndex.upsert(batch);
+    }
+  }
+
+  console.log(`Indexing complete!`);
+
+  return { success: true, indexedFiles: vectors.length };
+}
+
+export async function retrieveContext(
+  query: string,
+  repoId: string,
+  topK: number = 5
+) {
+  const embedding = await generateEmbedding(query);
+
+  const results = await pineconeIndex.query({
+    vector: embedding,
+    topK,
+    filter: { repoId },
+    includeMetadata: true,
+  });
+
+  return (
+    results.matches?.flatMap((match) =>
+      match.metadata ? (match.metadata.content as string[]) : []
+    ) || []
+  );
+}

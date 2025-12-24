@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import { inngest } from "@/lib/inngest/client";
 import { getCurrentSession } from "@/modules/auth/lib/utils";
 import { createWebhook, getRepositories } from "@/modules/github/lib/github";
 
@@ -54,7 +55,18 @@ export const connectRepository = async (
 
   // TODO: Increase user's connected repository count, etc. for usage tracking
 
-  // TODO: trigger Repo indexing for RAG here
+  try {
+    await inngest.send({
+      name: "repository.connected",
+      data: {
+        owner,
+        name,
+        userId: session.user.id,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to send inngest event:", error);
+  }
 
   return webhook;
 };

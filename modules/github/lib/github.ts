@@ -162,3 +162,66 @@ export async function deleteWebhook(owner: string, repo: string) {
     };
   }
 }
+
+export async function getRepoFilesContent(
+  owner: string,
+  repo: string,
+  token: string,
+  path: string = ""
+): Promise<{ path: string; content: string }[]> {
+  const octokit = new Octokit({ auth: token });
+  const { data } = await octokit.rest.repos.getContent({
+    owner,
+    path,
+    repo,
+  });
+
+  if (!Array.isArray(data)) {
+    if (data.type === "file" && data.content) {
+      const content = Buffer.from(data.content, "base64").toString("utf-8");
+      return [{ path: data.path, content }];
+    }
+    return [];
+  }
+
+  const files: { path: string; content: string }[] = [];
+
+  for (const item of data) {
+    if (item.type === "file") {
+      const { data: fileContent } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: item.path,
+      });
+
+      if (
+        !Array.isArray(fileContent) &&
+        fileContent.type === "file" &&
+        fileContent.content
+      ) {
+        // Filter out non-code files based like images, binaries, etc.
+
+        if (
+          !item.name.match(
+            /\.(png|jpg|jpeg|gif|bmp|svg|ico|exe|dll|bin|class|jar|zip|tar|gz|mp3|mp4|mov|avi|wmv|flv|mkv)$/i
+          )
+        ) {
+          const content = Buffer.from(fileContent.content, "base64").toString(
+            "utf-8"
+          );
+          files.push({ path: item.path, content });
+        }
+      }
+    } else if (item.type === "dir") {
+      const subDirFiles = await getRepoFilesContent(
+        owner,
+        repo,
+        token,
+        item.path
+      );
+      files.concat(subDirFiles);
+    }
+  }
+
+  return files;
+}
