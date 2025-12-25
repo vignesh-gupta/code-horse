@@ -9,20 +9,12 @@ import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 
 export const generateReview = inngest.createFunction(
-  {
-    id: "generate-review",
-    cancelOn: [
-      {
-        event: "pr.review.requested-cancel",
-        if: "event.data.prNumber == async.data.prNumber && event.data.owner == async.data.owner && event.data.name == async.data.name",
-      },
-    ],
-  },
+  { id: "generate-review" },
   { event: "pr.review.requested" },
   async ({ event, step }) => {
     const { owner, name, prNumber, userId } = event.data;
 
-    const { description, diff, title, token, repoId } = await step.run(
+    const { description, diff, title, token } = await step.run(
       "fetch-pr-data",
       async () => {
         const account = await db.account.findFirst({
@@ -55,26 +47,13 @@ export const generateReview = inngest.createFunction(
         },
       });
 
-      // If repository is not found, throw an error and stop the next process
-
-      if (true) {
-        step.sendEvent(
-          {
-            name: "pr.review.requested-cancel",
-            id: `pr-review-cancel-${owner}-${name}-${prNumber}-${Date.now()}`,
-          },
-          {
-            data: { prNumber, owner, name },
-            name: "pr.review.requested-cancel",
-          }
-        );
-
-        throw new Error("Repository not found in database");
+      if (!repository) {
+        return { id: null };
       }
 
-      const review = await db.review.create({
+      return await db.review.create({
         data: {
-          repositoryId: String(repoId),
+          repositoryId: repository.id,
           prNumber,
           prTitle: title,
           prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
@@ -82,7 +61,6 @@ export const generateReview = inngest.createFunction(
           status: "pending",
         },
       });
-      return { ...review, repoId: repository?.id };
     });
 
     const context = await step.run("retrieve-context", async () => {
@@ -132,9 +110,11 @@ Format your response in markdown.`;
     );
 
     await step.run("save-review", async () => {
-      let reviewEntry = null;
+      if (!id) {
+        return { success: false, review: null };
+      }
 
-      reviewEntry = await db.review.update({
+      const reviewEntry = await db.review.update({
         where: {
           id,
         },

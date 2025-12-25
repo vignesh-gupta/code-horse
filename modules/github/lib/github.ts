@@ -253,7 +253,6 @@ export async function getPullRequestDiff(
     title: pr.title,
     description: pr.body || "",
     diff: diff as unknown as string,
-    repoId: pr.base.repo.id,
   };
 }
 
