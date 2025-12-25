@@ -24,13 +24,15 @@ export const indexRepo = inngest.createFunction(
       return await getRepoFilesContent(owner, name, account.accessToken);
     });
 
-    await step.run("index-codebase", async () => {
-      await indexCodeBase(`${owner}/${name}`, files);
-    });
+    await step.run(
+      "index-codebase",
+      async () => await indexCodeBase(`${owner}/${name}`, files)
+    );
 
     return {
       success: true,
       message: `Repository ${owner}/${name} indexed successfully.`,
+      indexedFiles: files.length,
     };
   }
 );

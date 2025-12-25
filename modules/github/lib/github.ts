@@ -137,8 +137,7 @@ export async function deleteWebhook(owner: string, repo: string) {
 
     if (!existingHook) {
       return {
-        success: false,
-        error: "Webhook not found",
+        success: true,
         repo,
       };
     }
@@ -219,7 +218,8 @@ export async function getRepoFilesContent(
         token,
         item.path
       );
-      files.concat(subDirFiles);
+
+      files.push(...subDirFiles);
     }
   }
 

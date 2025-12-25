@@ -58,6 +58,7 @@ const RepositoryList = () => {
         }
 
         queryClient.invalidateQueries({ queryKey: ["connected-repositories"] });
+        queryClient.invalidateQueries({ queryKey: ["repositories"] });
         queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
         toast.success("Repository disconnected successfully");
       },
