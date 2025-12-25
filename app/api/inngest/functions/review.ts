@@ -9,7 +9,15 @@ import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 
 export const generateReview = inngest.createFunction(
-  { id: "generate-review" },
+  {
+    id: "generate-review",
+    cancelOn: [
+      {
+        event: "pr.review.requested-cancel",
+        if: "event.data.prNumber == async.data.prNumber && event.data.owner == async.data.owner && event.data.name == async.data.name",
+      },
+    ],
+  },
   { event: "pr.review.requested" },
   async ({ event, step }) => {
     const { owner, name, prNumber, userId } = event.data;
@@ -39,20 +47,43 @@ export const generateReview = inngest.createFunction(
       }
     );
 
-    const { id } = await step.run(
-      "pre-review",
-      async () =>
-        await db.review.create({
-          data: {
-            repositoryId: String(repoId),
-            prNumber,
-            prTitle: title,
-            prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
-            review,
-            status: "pending",
+    const { id } = await step.run("pre-review", async () => {
+      const repository = await db.repository.findFirst({
+        where: {
+          owner,
+          name,
+        },
+      });
+
+      // If repository is not found, throw an error and stop the next process
+
+      if (true) {
+        step.sendEvent(
+          {
+            name: "pr.review.requested-cancel",
+            id: `pr-review-cancel-${owner}-${name}-${prNumber}-${Date.now()}`,
           },
-        })
-    );
+          {
+            data: { prNumber, owner, name },
+            name: "pr.review.requested-cancel",
+          }
+        );
+
+        throw new Error("Repository not found in database");
+      }
+
+      const review = await db.review.create({
+        data: {
+          repositoryId: String(repoId),
+          prNumber,
+          prTitle: title,
+          prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
+          review: "🤖 AI review in progress...",
+          status: "pending",
+        },
+      });
+      return { ...review, repoId: repository?.id };
+    });
 
     const context = await step.run("retrieve-context", async () => {
       const query = `${title}\n\n${description}`;
