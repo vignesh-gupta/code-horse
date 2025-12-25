@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { getCurrentSession } from "@/modules/auth/lib/utils";
+import { decrementRepositoryCount } from "@/modules/payment/lib/subscription";
 import { Octokit } from "octokit";
 
 export const getGitHubToken = async () => {
@@ -123,6 +124,7 @@ export async function createWebhook(owner: string, repo: string) {
 }
 
 export async function deleteWebhook(owner: string, repo: string) {
+  const session = await getCurrentSession();
   const octokit = await getOctokitInstance();
 
   const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/github`;
@@ -147,6 +149,8 @@ export async function deleteWebhook(owner: string, repo: string) {
       repo,
       hook_id: existingHook.id,
     });
+
+    await decrementRepositoryCount(session.user.id);
 
     return {
       success: true,

@@ -12,21 +12,17 @@ export async function POST(req: NextRequest) {
     }
 
     if (event === "pull_request") {
-      const { action, repository, number:prNumber } = body;
+      const { action, repository, number: prNumber } = body;
 
       const [owner, repoName] = repository.full_name.split("/");
 
       if (action === "opened" || action === "synchronize") {
-        reviewPullRequest(owner, repoName, prNumber)
-          .then(() =>
-            console.log(`Pull request #${prNumber} queued successfully.`)
-          )
-          .catch((error) => {
-            console.error(
-              `Error reviewing pull request for ${repoName} #${prNumber}:`,
-              error
-            );
-          });
+        reviewPullRequest(owner, repoName, prNumber).catch((error) => {
+          console.error(
+            `Error reviewing pull request for ${repoName} #${prNumber}:`,
+            error
+          );
+        });
       }
     }
 

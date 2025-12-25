@@ -1,9 +1,14 @@
 "use server";
 
 import db from "@/lib/db";
+import { RateLimitError } from "@/lib/error";
 import { inngest } from "@/lib/inngest/client";
 import { getCurrentSession } from "@/modules/auth/lib/utils";
 import { createWebhook, getRepositories } from "@/modules/github/lib/github";
+import {
+  canConnectRepo,
+  incrementRepositoryCount,
+} from "@/modules/payment/lib/subscription";
 
 export const fetchRepositoryList = async (
   page: number = 1,
@@ -34,7 +39,13 @@ export const connectRepository = async (
 ) => {
   const session = await getCurrentSession();
 
-  // TODO: Add rate limiting / validation for subscribed users
+  const canConnect = await canConnectRepo(session.user.id);
+
+  if (!canConnect) {
+    throw new RateLimitError(
+      "Repository limit reached. Please upgrade your subscription to connect more repositories."
+    );
+  }
 
   const webhook = await createWebhook(owner, name);
 
@@ -53,7 +64,7 @@ export const connectRepository = async (
     },
   });
 
-  // TODO: Increase user's connected repository count, etc. for usage tracking
+  await incrementRepositoryCount(session.user.id);
 
   try {
     await inngest.send({

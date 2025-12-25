@@ -1,8 +1,8 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { connectRepository } from "../actions";
 import { toast } from "sonner";
+import { connectRepository } from "../actions";
 
 export const useConnectRepository = () => {
   const queryClient = useQueryClient();
@@ -25,6 +25,11 @@ export const useConnectRepository = () => {
       toast.success("Repository connected successfully");
     },
     onError: (error) => {
+      if (error.name === "RateLimitError") {
+        toast.error(error.message);
+        return;
+      }
+
       console.log("Failed to connect repo", error);
       toast.error("An error occurred while connecting the repository");
     },
