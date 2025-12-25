@@ -1,11 +1,21 @@
 "use client";
 
+import PageHeader from "@/components/page-header";
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import RepositoryCard from "@/modules/repository/components/repository-card";
 import { RepositorySkeleton } from "@/modules/repository/components/repository-skeleton";
 import { useRepository } from "@/modules/repository/hooks/use-repository";
-import { Search } from "lucide-react";
+import { BookMarked, GitBranch, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const RepositoryPage = () => {
@@ -57,25 +67,34 @@ const RepositoryPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Repositories</h1>
-          <p className="text-muted-foreground">
-            Manage and view your GitHub repositories.
-          </p>
-        </div>
+        <PageHeader
+          title="Repositories"
+          description="Manage and view your GitHub repositories."
+        />
+
         <RepositorySkeleton />
+      </div>
+    );
+  }
+
+  if (!data || data.pages[0].length === 0) {
+    return (
+      <div className="flex flex-col gap-y-4 min-h-full">
+        <PageHeader
+          title="Repositories"
+          description="Manage and view your GitHub repositories."
+        />
+        <NoRepositories />
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-y-4">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Repositories</h1>
-        <p className="text-muted-foreground">
-          Manage and view your GitHub repositories.
-        </p>
-      </div>
+      <PageHeader
+        title="Repositories"
+        description="Manage and view your GitHub repositories."
+      />
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4" />
@@ -106,3 +125,34 @@ const RepositoryPage = () => {
 };
 
 export default RepositoryPage;
+
+const NoRepositories = () => (
+  <Empty className="border bg-accent/10 flex-1">
+    <EmptyHeader>
+      <EmptyMedia variant="icon">
+        <GitBranch />
+      </EmptyMedia>
+      <EmptyTitle>No repositories</EmptyTitle>
+      <EmptyDescription>
+        Create your first repository to get started.
+      </EmptyDescription>
+    </EmptyHeader>
+
+    <EmptyContent>
+      <Button
+        nativeButton={false}
+        size="lg"
+        render={
+          <a
+            href="https://github.com/new"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <BookMarked className="size-4" />
+            New Repository
+          </a>
+        }
+      />
+    </EmptyContent>
+  </Empty>
+);
