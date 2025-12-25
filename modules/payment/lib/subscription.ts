@@ -5,26 +5,9 @@ import {
   SubscriptionTier,
   SubscriptionStatus,
 } from "@/lib/generated/prisma/enums";
+import { UserLimit } from "@/lib/types";
 
-export { SubscriptionTier, SubscriptionStatus };
-
-export type UserLimit = {
-  tier: SubscriptionTier;
-  repositories: {
-    current: number;
-    limit: number | null; // null means unlimited
-    canAdd: boolean;
-  };
-  reviews: {
-    [repoId: string]: {
-      current: number;
-      limit: number | null;
-      canAdd: boolean;
-    };
-  };
-};
-
-export const TIER_LIMITS = {
+const TIER_LIMITS = {
   FREE: {
     repositories: 5,
     reviewsPerRepository: 5,
@@ -35,7 +18,7 @@ export const TIER_LIMITS = {
   },
 } as const;
 
-export async function getUserTier(userId: string): Promise<SubscriptionTier> {
+async function getUserTier(userId: string): Promise<SubscriptionTier> {
   const user = await db.user.findUnique({
     where: { id: userId },
     select: { subscriptionTier: true },

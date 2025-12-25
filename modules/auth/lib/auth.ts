@@ -1,10 +1,10 @@
 import db from "@/lib/db";
 import { polarClient } from "@/modules/payment/config/polar";
+import { updateUserTier } from "@/modules/payment/lib/subscription";
 import {
-  SubscriptionStatus,
   SubscriptionTier,
-  updateUserTier,
-} from "@/modules/payment/lib/subscription";
+  SubscriptionStatus,
+} from "@/lib/generated/prisma/enums";
 import {
   checkout,
   polar,
@@ -26,6 +26,7 @@ export const auth = betterAuth({
       scope: ["repo"],
     },
   },
+  trustedOrigins: ["http://localhost:3000", process.env.NEXT_PUBLIC_APP_URL!],
   plugins: [
     polar({
       client: polarClient,
@@ -38,7 +39,9 @@ export const auth = betterAuth({
               slug: "pro", // Custom slug for easy reference in Checkout URL, e.g. /checkout/pro
             },
           ],
-          successUrl: "/success?checkout_id={CHECKOUT_ID}",
+          successUrl:
+            process.env.POLAR_SUCCESS_URL ||
+            "http://localhost:3000/dashboard/subscriptions?success=true",
           authenticatedUsersOnly: true,
         }),
         portal({
@@ -103,16 +106,24 @@ export const auth = betterAuth({
           },
           onOrderPaid: async () => {},
           onCustomerCreated: async ({ data }) => {
+            console.log(`Creating Customer with email ${data.email}`);
+
             const user = await db.user.findUnique({
               where: { email: data.email },
             });
 
-            if (!user) return;
+            if (!user) {
+              console.warn(`No user Found`);
 
-            await db.user.update({
+              return;
+            }
+
+            const updateUser = await db.user.update({
               where: { id: user.id },
               data: { polarCustomerId: data.id },
             });
+
+            console.log(`Updated user ${updateUser.id} with customer ID`);
           },
         }),
       ],
