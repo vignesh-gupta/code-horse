@@ -36,7 +36,7 @@ export async function reviewPullRequest(
       throw new Error("Repository not found");
     }
 
-    const canReview = canCreateReview(repository.userId, repository.id);
+    const canReview = await canCreateReview(repository.userId, repository.id);
 
     if (!canReview) {
       throw new RateLimitError(
