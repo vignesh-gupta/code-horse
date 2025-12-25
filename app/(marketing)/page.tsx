@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -65,14 +63,18 @@ const CodeBlock = ({ className }: { className?: string }) => {
           <div
             key={i}
             className="opacity-0 animate-fade-slide-up"
-            style={{ animationDelay: `${i * 80}ms`, animationFillMode: "forwards" }}
+            style={{
+              animationDelay: `${i * 80}ms`,
+              animationFillMode: "forwards",
+            }}
           >
             <span
               className={cn({
                 "text-zinc-500": line.type === "comment",
                 "text-purple-400": line.type === "keyword",
                 "text-yellow-300": line.type === "function",
-                "text-zinc-400": line.type === "punctuation" || line.type === "indent",
+                "text-zinc-400":
+                  line.type === "punctuation" || line.type === "indent",
                 "text-orange-400": line.type === "ai",
                 "text-blue-400": line.type === "method",
                 "text-cyan-400": line.type === "property",
@@ -168,9 +170,7 @@ const PricingCard = ({
   <div
     className={cn(
       "relative p-8 rounded-2xl border backdrop-blur-xl opacity-0 animate-fade-slide-up",
-      popular
-        ? "border-primary bg-primary/5"
-        : "border-border/50 bg-card/40"
+      popular ? "border-primary bg-primary/5" : "border-border/50 bg-card/40"
     )}
     style={{ animationDelay: `${delay}ms`, animationFillMode: "forwards" }}
   >
@@ -183,7 +183,9 @@ const PricingCard = ({
       <h3 className="text-xl font-semibold mb-2">{name}</h3>
       <div className="flex items-baseline justify-center gap-1 mb-2">
         <span className="text-4xl font-bold">{price}</span>
-        {price !== "Custom" && <span className="text-muted-foreground">/mo</span>}
+        {price !== "Custom" && (
+          <span className="text-muted-foreground">/mo</span>
+        )}
       </div>
       <p className="text-sm text-muted-foreground">{description}</p>
     </div>
@@ -224,7 +226,9 @@ const TestimonialCard = ({
     className="p-6 rounded-2xl border border-border/50 bg-card/40 backdrop-blur-xl opacity-0 animate-fade-slide-up"
     style={{ animationDelay: `${delay}ms`, animationFillMode: "forwards" }}
   >
-    <p className="text-sm leading-relaxed mb-4 text-foreground/80">&ldquo;{quote}&rdquo;</p>
+    <p className="text-sm leading-relaxed mb-4 text-foreground/80">
+      &ldquo;{quote}&rdquo;
+    </p>
     <div className="flex items-center gap-3">
       <div className="w-10 h-10 rounded-full bg-linear-to-br from-primary to-secondary flex items-center justify-center text-primary-foreground font-semibold">
         {author[0]}
@@ -250,16 +254,28 @@ const Navbar = () => (
         <span className="font-semibold tracking-tight">CodeHorse</span>
       </Link>
       <div className="hidden md:flex items-center gap-8">
-        <a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a
+          href="#features"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
           Features
         </a>
-        <a href="#how-it-works" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a
+          href="#how-it-works"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
           How it Works
         </a>
-        <a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a
+          href="#pricing"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
           Pricing
         </a>
-        <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <a
+          href="#"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
           Docs
         </a>
       </div>
@@ -299,28 +315,112 @@ const Footer = () => (
         <div>
           <h4 className="font-medium mb-4">Product</h4>
           <ul className="space-y-2">
-            <li><a href="#features" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</a></li>
-            <li><a href="#pricing" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Changelog</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Integrations</a></li>
+            <li>
+              <a
+                href="#features"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Features
+              </a>
+            </li>
+            <li>
+              <a
+                href="#pricing"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Pricing
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Changelog
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Integrations
+              </a>
+            </li>
           </ul>
         </div>
         <div>
           <h4 className="font-medium mb-4">Resources</h4>
           <ul className="space-y-2">
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Documentation</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">API Reference</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Blog</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Support</a></li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Documentation
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                API Reference
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Blog
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Support
+              </a>
+            </li>
           </ul>
         </div>
         <div>
           <h4 className="font-medium mb-4">Company</h4>
           <ul className="space-y-2">
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">About</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Careers</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Privacy</a></li>
-            <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Terms</a></li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Careers
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Privacy
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Terms
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -329,10 +429,16 @@ const Footer = () => (
           © {new Date().getFullYear()} CodeHorse. All rights reserved.
         </p>
         <div className="flex items-center gap-4">
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+          <a
+            href="#"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
             <Github className="w-5 h-5" />
           </a>
-          <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+          <a
+            href="#"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
@@ -344,7 +450,7 @@ const Footer = () => (
 );
 
 // --- MAIN LANDING PAGE ---
-export default function LandingPage() {
+export default async function LandingPage() {
   const features = [
     {
       icon: Bot,
@@ -416,7 +522,7 @@ export default function LandingPage() {
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* Background grid */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-        
+
         {/* Gradient orbs */}
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl opacity-50" />
         <div className="absolute top-40 right-1/4 w-80 h-80 bg-secondary/20 rounded-full blur-3xl opacity-50" />
@@ -424,32 +530,65 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/50 bg-card/40 backdrop-blur-xl text-sm mb-6 opacity-0 animate-fade-slide-up" style={{ animationFillMode: "forwards" }}>
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/50 bg-card/40 backdrop-blur-xl text-sm mb-6 opacity-0 animate-fade-slide-up"
+                style={{ animationFillMode: "forwards" }}
+              >
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span>AI-Powered Code Reviews</span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 opacity-0 animate-fade-slide-up" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
+              <h1
+                className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 opacity-0 animate-fade-slide-up"
+                style={{
+                  animationDelay: "100ms",
+                  animationFillMode: "forwards",
+                }}
+              >
                 Ship better code,{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
                   faster
                 </span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-lg opacity-0 animate-fade-slide-up" style={{ animationDelay: "200ms", animationFillMode: "forwards" }}>
-                CodeHorse is an AI agent that reviews your pull requests, catches bugs, suggests improvements, and comments directly on your code — in seconds.
+              <p
+                className="text-lg text-muted-foreground mb-8 max-w-lg opacity-0 animate-fade-slide-up"
+                style={{
+                  animationDelay: "200ms",
+                  animationFillMode: "forwards",
+                }}
+              >
+                CodeHorse is an AI agent that reviews your pull requests,
+                catches bugs, suggests improvements, and comments directly on
+                your code — in seconds.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-slide-up" style={{ animationDelay: "300ms", animationFillMode: "forwards" }}>
+              <div
+                className="flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-slide-up"
+                style={{
+                  animationDelay: "300ms",
+                  animationFillMode: "forwards",
+                }}
+              >
                 <Link href="/register">
                   <Button size="lg" className="h-14 px-8 rounded-2xl text-base">
                     Start Free Trial
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="h-14 px-8 rounded-2xl text-base">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 rounded-2xl text-base"
+                >
                   <Github className="w-5 h-5 mr-2" />
                   View on GitHub
                 </Button>
               </div>
-              <div className="mt-8 flex items-center gap-6 text-sm text-muted-foreground opacity-0 animate-fade-slide-up" style={{ animationDelay: "400ms", animationFillMode: "forwards" }}>
+              <div
+                className="mt-8 flex items-center gap-6 text-sm text-muted-foreground opacity-0 animate-fade-slide-up"
+                style={{
+                  animationDelay: "400ms",
+                  animationFillMode: "forwards",
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-primary" />
                   Free 14-day trial
@@ -460,18 +599,31 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div className="opacity-0 animate-fade-slide-up" style={{ animationDelay: "500ms", animationFillMode: "forwards" }}>
+            <div
+              className="opacity-0 animate-fade-slide-up"
+              style={{ animationDelay: "500ms", animationFillMode: "forwards" }}
+            >
               <CodeBlock />
             </div>
           </div>
 
           {/* Social proof */}
-          <div className="mt-20 text-center opacity-0 animate-fade-slide-up" style={{ animationDelay: "600ms", animationFillMode: "forwards" }}>
+          <div
+            className="mt-20 text-center opacity-0 animate-fade-slide-up"
+            style={{ animationDelay: "600ms", animationFillMode: "forwards" }}
+          >
             <p className="text-sm text-muted-foreground mb-6">
               Trusted by engineering teams at
             </p>
             <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 text-muted-foreground/60">
-              {["Vercel", "Stripe", "Linear", "Notion", "Figma", "Supabase"].map((company) => (
+              {[
+                "Vercel",
+                "Stripe",
+                "Linear",
+                "Notion",
+                "Figma",
+                "Supabase",
+              ].map((company) => (
                 <span key={company} className="text-lg font-medium">
                   {company}
                 </span>
@@ -485,19 +637,30 @@ export default function LandingPage() {
       <section id="features" className="py-24 relative">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up" style={{ animationFillMode: "forwards" }}>
+            <h2
+              className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up"
+              style={{ animationFillMode: "forwards" }}
+            >
               Everything you need for{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
                 better code reviews
               </span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto opacity-0 animate-fade-slide-up" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
-              CodeHorse brings AI-powered intelligence to every pull request, helping your team ship higher quality code with less effort.
+            <p
+              className="text-muted-foreground max-w-2xl mx-auto opacity-0 animate-fade-slide-up"
+              style={{ animationDelay: "100ms", animationFillMode: "forwards" }}
+            >
+              CodeHorse brings AI-powered intelligence to every pull request,
+              helping your team ship higher quality code with less effort.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => (
-              <FeatureCard key={feature.title} {...feature} delay={200 + i * 100} />
+              <FeatureCard
+                key={feature.title}
+                {...feature}
+                delay={200 + i * 100}
+              />
             ))}
           </div>
         </div>
@@ -508,14 +671,24 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up" style={{ animationFillMode: "forwards" }}>
+              <h2
+                className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up"
+                style={{ animationFillMode: "forwards" }}
+              >
                 Set up in{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
                   minutes
                 </span>
               </h2>
-              <p className="text-muted-foreground mb-10 opacity-0 animate-fade-slide-up" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
-                Get AI code reviews on every PR with just a few clicks. No complex setup required.
+              <p
+                className="text-muted-foreground mb-10 opacity-0 animate-fade-slide-up"
+                style={{
+                  animationDelay: "100ms",
+                  animationFillMode: "forwards",
+                }}
+              >
+                Get AI code reviews on every PR with just a few clicks. No
+                complex setup required.
               </p>
               <div className="space-y-2">
                 <StepCard
@@ -538,7 +711,10 @@ export default function LandingPage() {
                 />
               </div>
             </div>
-            <div className="relative opacity-0 animate-fade-slide-up" style={{ animationDelay: "500ms", animationFillMode: "forwards" }}>
+            <div
+              className="relative opacity-0 animate-fade-slide-up"
+              style={{ animationDelay: "500ms", animationFillMode: "forwards" }}
+            >
               {/* Mock PR comment */}
               <div className="p-6 rounded-2xl border border-border/50 bg-card/60 backdrop-blur-xl">
                 <div className="flex items-start gap-4 mb-4">
@@ -547,12 +723,17 @@ export default function LandingPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-sm">codehorse[bot]</span>
-                      <span className="text-xs text-muted-foreground">commented just now</span>
+                      <span className="font-semibold text-sm">
+                        codehorse[bot]
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        commented just now
+                      </span>
                     </div>
                     <div className="p-4 rounded-xl bg-background/50 border border-border/50">
                       <p className="text-sm mb-3">
-                        <span className="text-yellow-500">⚠️</span> Potential memory leak detected in this useEffect hook.
+                        <span className="text-yellow-500">⚠️</span> Potential
+                        memory leak detected in this useEffect hook.
                       </p>
                       <div className="p-3 rounded-lg bg-zinc-950/80 font-mono text-xs text-zinc-400 mb-3">
                         <code>
@@ -564,13 +745,16 @@ export default function LandingPage() {
                           {"(handler);"}
                           <br />
                           {"  "}
-                          <span className="text-green-400">{"// Missing cleanup"}</span>
+                          <span className="text-green-400">
+                            {"// Missing cleanup"}
+                          </span>
                           <br />
                           {"});"}
                         </code>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Consider adding a cleanup function to unsubscribe when the component unmounts.
+                        Consider adding a cleanup function to unsubscribe when
+                        the component unmounts.
                       </p>
                     </div>
                   </div>
@@ -604,12 +788,17 @@ export default function LandingPage() {
               <div
                 key={stat.label}
                 className="text-center p-6 rounded-2xl border border-border/50 bg-card/40 backdrop-blur-xl opacity-0 animate-fade-slide-up"
-                style={{ animationDelay: `${i * 100}ms`, animationFillMode: "forwards" }}
+                style={{
+                  animationDelay: `${i * 100}ms`,
+                  animationFillMode: "forwards",
+                }}
               >
                 <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -620,19 +809,29 @@ export default function LandingPage() {
       <section className="py-24 bg-card/30">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up" style={{ animationFillMode: "forwards" }}>
+            <h2
+              className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up"
+              style={{ animationFillMode: "forwards" }}
+            >
               Loved by{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
                 engineering teams
               </span>
             </h2>
-            <p className="text-muted-foreground opacity-0 animate-fade-slide-up" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
+            <p
+              className="text-muted-foreground opacity-0 animate-fade-slide-up"
+              style={{ animationDelay: "100ms", animationFillMode: "forwards" }}
+            >
               See what developers are saying about CodeHorse
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, i) => (
-              <TestimonialCard key={testimonial.author} {...testimonial} delay={200 + i * 100} />
+              <TestimonialCard
+                key={testimonial.author}
+                {...testimonial}
+                delay={200 + i * 100}
+              />
             ))}
           </div>
         </div>
@@ -642,13 +841,19 @@ export default function LandingPage() {
       <section id="pricing" className="py-24">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up" style={{ animationFillMode: "forwards" }}>
+            <h2
+              className="text-3xl md:text-4xl font-bold mb-4 opacity-0 animate-fade-slide-up"
+              style={{ animationFillMode: "forwards" }}
+            >
               Simple,{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">
                 transparent pricing
               </span>
             </h2>
-            <p className="text-muted-foreground opacity-0 animate-fade-slide-up" style={{ animationDelay: "100ms", animationFillMode: "forwards" }}>
+            <p
+              className="text-muted-foreground opacity-0 animate-fade-slide-up"
+              style={{ animationDelay: "100ms", animationFillMode: "forwards" }}
+            >
               Start free, scale as you grow. No hidden fees.
             </p>
           </div>
@@ -705,7 +910,7 @@ export default function LandingPage() {
           <div className="relative p-12 rounded-3xl border border-border/50 bg-linear-to-br from-primary/10 via-card/60 to-secondary/10 backdrop-blur-xl text-center overflow-hidden">
             {/* Background decoration */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.2)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.2)_1px,transparent_1px)] bg-size-[2rem_2rem]" />
-            
+
             <div className="relative">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-sm mb-6">
                 <GitBranch className="w-4 h-4 text-primary" />
@@ -715,7 +920,8 @@ export default function LandingPage() {
                 Start shipping better code today
               </h2>
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                Join thousands of developers who use CodeHorse to catch bugs, improve code quality, and ship faster.
+                Join thousands of developers who use CodeHorse to catch bugs,
+                improve code quality, and ship faster.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/register">
@@ -724,7 +930,11 @@ export default function LandingPage() {
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </Link>
-                <Button variant="outline" size="lg" className="h-14 px-8 rounded-2xl text-base">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="h-14 px-8 rounded-2xl text-base"
+                >
                   Schedule a Demo
                 </Button>
               </div>

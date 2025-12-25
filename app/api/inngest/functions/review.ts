@@ -39,6 +39,30 @@ export const generateReview = inngest.createFunction(
       }
     );
 
+    const { id } = await step.run("pre-review", async () => {
+      const repository = await db.repository.findFirst({
+        where: {
+          owner,
+          name,
+        },
+      });
+
+      if (!repository) {
+        return { id: null };
+      }
+
+      return await db.review.create({
+        data: {
+          repositoryId: repository.id,
+          prNumber,
+          prTitle: title,
+          prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
+          review: "🤖 AI review in progress...",
+          status: "pending",
+        },
+      });
+    });
+
     const context = await step.run("retrieve-context", async () => {
       const query = `${title}\n\n${description}`;
 
@@ -80,30 +104,31 @@ Format your response in markdown.`;
       return text;
     });
 
-    await step.run("post-comment", async () => {
-      await postReviewComment(token, owner, name, prNumber, review);
-    });
+    const { data: { html_url } }   = await step.run(
+      "post-comment",
+      async () => await postReviewComment(token, owner, name, prNumber, review)
+    );
 
     await step.run("save-review", async () => {
-      const repository = await db.repository.findFirst({
+      if (!id) {
+        return { success: false, review: null };
+      }
+
+      const reviewEntry = await db.review.update({
         where: {
-          owner,
-          name,
+          id,
+        },
+        data: {
+          prUrl: html_url,
+          review,
+          status: "completed",
         },
       });
 
-      if (repository) {
-        await db.review.create({
-          data: {
-            repositoryId: repository.id,
-            prNumber,
-            prTitle: title,
-            prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
-            review,
-            status: "completed",
-          },
-        });
-      }
+      return {
+        success: true,
+        review: reviewEntry,
+      };
     });
     return { success: true };
   }
