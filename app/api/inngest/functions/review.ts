@@ -14,7 +14,7 @@ export const generateReview = inngest.createFunction(
   async ({ event, step }) => {
     const { owner, name, prNumber, userId } = event.data;
 
-    const { description, diff, title, token } = await step.run(
+    const { description, diff, title, token, repoId } = await step.run(
       "fetch-pr-data",
       async () => {
         const account = await db.account.findFirst({
@@ -37,6 +37,21 @@ export const generateReview = inngest.createFunction(
 
         return { ...data, token: account.accessToken };
       }
+    );
+
+    const { id } = await step.run(
+      "pre-review",
+      async () =>
+        await db.review.create({
+          data: {
+            repositoryId: String(repoId),
+            prNumber,
+            prTitle: title,
+            prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
+            review,
+            status: "pending",
+          },
+        })
     );
 
     const context = await step.run("retrieve-context", async () => {
@@ -86,27 +101,17 @@ Format your response in markdown.`;
     );
 
     await step.run("save-review", async () => {
-      const repository = await db.repository.findFirst({
-        where: {
-          owner,
-          name,
-        },
-      });
-
       let reviewEntry = null;
 
-      if (repository) {
-       reviewEntry = await db.review.create({
-          data: {
-            repositoryId: repository.id,
-            prNumber,
-            prTitle: title,
-            prUrl: `https://github.com/${owner}/${name}/pull/${prNumber}`,
-            review,
-            status: "completed",
-          },
-        });
-      }
+      reviewEntry = await db.review.update({
+        where: {
+          id,
+        },
+        data: {
+          review,
+          status: "completed",
+        },
+      });
 
       return {
         success: true,

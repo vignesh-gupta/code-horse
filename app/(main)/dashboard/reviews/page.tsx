@@ -100,16 +100,19 @@ const ReviewCard = ({ review }: { review: ReviewWithRepository }) => {
             </CardDescription>
           </div>
           <CardAction>
-            <Button variant="outline" size="sm" render={<a />}>
-              <a
-                href={review.prUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gap-2"
-              >
-                <ExternalLink className="size-4" />
-                View on GitHub
-              </a>
+            <Button
+              variant="outline"
+              size="sm"
+              render={
+                <a
+                  href={review.prUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
+            >
+              <ExternalLink className="size-4" />
+              View on GitHub
             </Button>
           </CardAction>
         </div>
