@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { GitHubRepository } from "@/modules/github/lib/github";
 import { ExternalLink, Star } from "lucide-react";
-import { useTransition } from "react";
+import { useState } from "react";
 import { useConnectRepository } from "../hooks/use-connect-repository";
 
 const RepositoryCard = (
@@ -22,16 +22,20 @@ const RepositoryCard = (
 ) => {
   const { mutateAsync } = useConnectRepository();
 
-  const [isConnecting, start] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConnect = async (repo: GitHubRepository) => {
-    start(async () => {
-      await mutateAsync({
+    setIsLoading(true);
+    await mutateAsync(
+      {
         githubId: Number(repo.id),
         owner: repo.owner.login,
         repo: repo.name,
-      });
-    });
+      },
+      {
+        onSettled: () => setIsLoading(false),
+      }
+    );
   };
 
   return (
@@ -45,10 +49,10 @@ const RepositoryCard = (
 
         <Button
           onClick={() => handleConnect(repo)}
-          disabled={isConnecting || repo.isConnected}
+          disabled={isLoading || repo.isConnected}
           variant={repo.isConnected ? "outline" : "default"}
         >
-          {isConnecting
+          {isLoading
             ? "Connecting..."
             : repo.isConnected
             ? "Connected"

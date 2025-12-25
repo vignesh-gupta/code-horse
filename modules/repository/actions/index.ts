@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import { RateLimitError } from "@/lib/error";
 import { inngest } from "@/lib/inngest/client";
 import { getCurrentSession } from "@/modules/auth/lib/utils";
 import { createWebhook, getRepositories } from "@/modules/github/lib/github";
@@ -41,7 +42,7 @@ export const connectRepository = async (
   const canConnect = await canConnectRepo(session.user.id);
 
   if (!canConnect) {
-    throw new Error(
+    throw new RateLimitError(
       "Repository limit reached. Please upgrade your subscription to connect more repositories."
     );
   }

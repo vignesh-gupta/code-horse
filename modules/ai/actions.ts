@@ -6,6 +6,7 @@ import {
   canCreateReview,
   incrementReviewCount,
 } from "../payment/lib/subscription";
+import { RateLimitError } from "@/lib/error";
 
 export async function reviewPullRequest(
   owner: string,
@@ -38,7 +39,9 @@ export async function reviewPullRequest(
     const canReview = canCreateReview(repository.userId, repository.id);
 
     if (!canReview) {
-      throw new Error("Review limit reached for your subscription tier.");
+      throw new RateLimitError(
+        "Review limit reached. Please upgrade your subscription to get more reviews."
+      );
     }
 
     await inngest.send({
