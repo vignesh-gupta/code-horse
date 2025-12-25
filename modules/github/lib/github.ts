@@ -265,7 +265,7 @@ export async function postReviewComment(
 ) {
   const octokit: Octokit = new Octokit({ auth: token });
 
-  await octokit.rest.issues.createComment({
+  return await octokit.rest.issues.createComment({
     owner,
     repo,
     issue_number: prNumber,

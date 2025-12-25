@@ -80,9 +80,10 @@ Format your response in markdown.`;
       return text;
     });
 
-    await step.run("post-comment", async () => {
-      await postReviewComment(token, owner, name, prNumber, review);
-    });
+    await step.run(
+      "post-comment",
+      async () => await postReviewComment(token, owner, name, prNumber, review)
+    );
 
     await step.run("save-review", async () => {
       const repository = await db.repository.findFirst({
@@ -92,8 +93,10 @@ Format your response in markdown.`;
         },
       });
 
+      let reviewEntry = null;
+
       if (repository) {
-        await db.review.create({
+       reviewEntry = await db.review.create({
           data: {
             repositoryId: repository.id,
             prNumber,
@@ -104,6 +107,11 @@ Format your response in markdown.`;
           },
         });
       }
+
+      return {
+        success: true,
+        review: reviewEntry,
+      };
     });
     return { success: true };
   }
