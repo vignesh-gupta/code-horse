@@ -9,6 +9,7 @@ import {
   CardTitle,
   CardDescription,
   CardAction,
+  CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,37 +85,17 @@ const ReviewCard = ({ review }: { review: ReviewWithRepository }) => {
     <Card>
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 space-y-1">
-            <div className="flex items-center gap-2">
-              <GitPullRequest className="size-4 text-muted-foreground" />
-              <CardTitle className="line-clamp-1">{review.prTitle}</CardTitle>
-              <Badge variant={statusColors[review.status]}>
-                {review.status}
-              </Badge>
-            </div>
-            <CardDescription className="flex items-center gap-4">
-              <span className="font-medium text-foreground">
-                {review.repository.fullName}
-              </span>
-              <span>PR #{review.prNumber}</span>
-            </CardDescription>
+          <div className="flex items-center gap-2">
+            <GitPullRequest className="size-4 text-muted-foreground" />
+            <CardTitle className="line-clamp-1">{review.prTitle}</CardTitle>
+            <Badge variant={statusColors[review.status]}>{review.status}</Badge>
           </div>
-          <CardAction>
-            <Button
-              variant="outline"
-              size="sm"
-              render={
-                <a
-                  href={review.prUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              }
-            >
-              <ExternalLink className="size-4" />
-              View on GitHub
-            </Button>
-          </CardAction>
+          <CardDescription className="flex items-center gap-4">
+            <span className="font-medium text-foreground">
+              {review.repository.fullName}
+            </span>
+            <span>PR #{review.prNumber}</span>
+          </CardDescription>
         </div>
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground pt-2">
           <Clock className="size-3" />
@@ -125,6 +106,24 @@ const ReviewCard = ({ review }: { review: ReviewWithRepository }) => {
           </span>
         </div>
       </CardHeader>
+      <CardContent>
+        <pre className="max-h-60 overflow-y-auto whitespace-pre-wrap wrap-break-word font-mono text-sm bg-accent/40 p-4 rounded-md mb-4">
+          {review.review.length > 300
+            ? review.review.substring(0, 300) + "..."
+            : review.review}
+        </pre>
+        <Button
+          variant="outline"
+          size="sm"
+          nativeButton={false}
+          render={
+            <a href={review.prUrl} target="_blank" rel="noopener noreferrer" />
+          }
+        >
+          <ExternalLink className="size-4" />
+          View on GitHub
+        </Button>
+      </CardContent>
     </Card>
   );
 };
