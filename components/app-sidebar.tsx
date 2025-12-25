@@ -39,7 +39,7 @@ const navigationItems = [
   },
   {
     title: "Repository",
-    href: "/dashboard/repository",
+    href: "/dashboard/repositories",
     icon: Github,
   },
   {
