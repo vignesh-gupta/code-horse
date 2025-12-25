@@ -104,7 +104,7 @@ Format your response in markdown.`;
       return text;
     });
 
-    await step.run(
+    const { data: { html_url } }   = await step.run(
       "post-comment",
       async () => await postReviewComment(token, owner, name, prNumber, review)
     );
@@ -119,6 +119,7 @@ Format your response in markdown.`;
           id,
         },
         data: {
+          prUrl: html_url,
           review,
           status: "completed",
         },

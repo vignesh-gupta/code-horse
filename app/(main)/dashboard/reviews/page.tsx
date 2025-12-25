@@ -1,29 +1,28 @@
 "use client";
 
 import PageHeader from "@/components/page-header";
-import { getReviews } from "@/modules/review/actions";
-import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardAction,
-  CardContent,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Empty,
+  EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
 } from "@/components/ui/empty";
-import { ExternalLink, GitPullRequest, FileText, Clock } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getReviews } from "@/modules/review/actions";
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
+import { Clock, ExternalLink, FileText, GitPullRequest } from "lucide-react";
 
 const ReviewPage = () => {
   const { data: reviews, isLoading } = useQuery({
@@ -108,7 +107,9 @@ const ReviewCard = ({ review }: { review: ReviewWithRepository }) => {
       </CardHeader>
       <CardContent>
         <pre className="max-h-60 overflow-y-auto whitespace-pre-wrap wrap-break-word font-mono text-sm bg-accent/40 p-4 rounded-md mb-4">
-          {review.review.length > 300
+          {review.review.length === 0
+            ? "No review content available."
+            : review.review.length > 300
             ? review.review.substring(0, 300) + "..."
             : review.review}
         </pre>
